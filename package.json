@@ -1,0 +1,26 @@
+{
+  "name": "authentication-with-graphql-node",
+  "version": "1.0.0",
+  "description": "A node server which handles admin and user authentications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdanbarkaath/authentication-with-graphql-node.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdanbarkaath/authentication-with-graphql-node/issues"
+  },
+  "homepage": "https://github.com/abdanbarkaath/authentication-with-graphql-node#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "graphql-server-express": "^1.4.1",
+    "pg": "^8.7.3"
+  }
+}
