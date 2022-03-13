@@ -3,6 +3,7 @@ import { Form, Button, Container } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { basePath } from "../../ui.config";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -14,7 +15,16 @@ export default function SignupPage() {
 
   const submitUser = (e) => {
     e.preventDefault();
-    console.log("submit user", e);
+    axios.post(`${basePath}/register`, user).then((res) => {
+      if (res.data?.errors?.length > 0) {
+        alert(res.data.errors[0].message);
+      } else {
+        console.log(res.data);
+        if (res.data.success) {
+          navigate("/login");
+        }
+      }
+    });
   };
 
   const navigateToLogin = () => {
@@ -23,13 +33,11 @@ export default function SignupPage() {
 
   const updateUser = (type, event) => {
     event.preventDefault();
-    console.log(event.target.value);
     setUser((prev) => {
       return { ...prev, [type]: event.target.value };
     });
   };
 
-  console.log(user);
   return (
     <S.FormContainer>
       <Form onSubmit={submitUser}>
@@ -38,6 +46,7 @@ export default function SignupPage() {
           <Form.Control
             type="name"
             placeholder="Enter name"
+            required
             onChange={(e) => updateUser("name", e)}
           />
         </Form.Group>
@@ -47,6 +56,7 @@ export default function SignupPage() {
           <Form.Control
             type="email"
             placeholder="Enter email"
+            required
             onChange={(e) => updateUser("email", e)}
           />
           <Form.Text className="text-muted">
@@ -59,6 +69,7 @@ export default function SignupPage() {
           <Form.Control
             type="password"
             placeholder="Password"
+            required
             onChange={(e) => updateUser("password", e)}
           />
         </Form.Group>

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/abdanbarkaath/authentication-with-graphql-node#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
