@@ -68,28 +68,34 @@ app.post("/login", (req, res) => {
         errors.push({ message: "No Such email exists" });
         res.send({ errors });
         throw err;
-      }
-      bcrypt.compare(
-        password,
-        result.rows[0].password,
-        function (err, isMatch) {
-          if (err) {
-            throw err;
-          }
-          if (!isMatch) {
-            errors.push({ message: "Passowrd does not match" });
-            res.send({ errors });
-          } else {
-            res.send({
-              user: {
-                name: result.rows[0].name,
-                email: result.rows[0].email,
-                id: result.rows[0].id,
-              },
-            });
-          }
+      } else {
+        if (result.rows.length > 0) {
+          bcrypt.compare(
+            password,
+            result.rows[0].password,
+            function (err, isMatch) {
+              if (err) {
+                throw err;
+              }
+              if (!isMatch) {
+                errors.push({ message: "Passowrd does not match" });
+                res.send({ errors });
+              } else {
+                res.send({
+                  user: {
+                    name: result.rows[0].name,
+                    email: result.rows[0].email,
+                    id: result.rows[0].id,
+                  },
+                });
+              }
+            }
+          );
+        } else {
+          errors.push({ message: "No Such email exists" });
+          res.send({ errors });
         }
-      );
+      }
     }
   );
 });
