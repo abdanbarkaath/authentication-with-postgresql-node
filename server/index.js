@@ -53,8 +53,45 @@ app.post("/register", async (req, res) => {
       );
     }
   }
+});
 
-  // res.send("post user");
+//authenticate and login user
+
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  let errors = [];
+  pool.query(
+    "SELECT * FROM users WHERE email = $1;",
+    [email],
+    (err, result) => {
+      if (err) {
+        errors.push({ message: "No Such email exists" });
+        res.send({ errors });
+        throw err;
+      }
+      bcrypt.compare(
+        password,
+        result.rows[0].password,
+        function (err, isMatch) {
+          if (err) {
+            throw err;
+          }
+          if (!isMatch) {
+            errors.push({ message: "Passowrd does not match" });
+            res.send({ errors });
+          } else {
+            res.send({
+              user: {
+                name: result.rows[0].name,
+                email: result.rows[0].email,
+                id: result.rows[0].id,
+              },
+            });
+          }
+        }
+      );
+    }
+  );
 });
 
 app.listen(PORT, () => {

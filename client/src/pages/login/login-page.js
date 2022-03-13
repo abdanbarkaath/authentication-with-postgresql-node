@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { basePath } from "../../ui.config";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -13,9 +14,8 @@ export default function LoginPage() {
 
   const submitUser = (e) => {
     e.preventDefault();
-    console.log("submit user", e);
-    axios.get("http://localhost:5000/").then((res) => {
-      console.log(res);
+    axios.post(`${basePath}/login`, user).then((res) => {
+      console.log(res.data, "login page");
     });
   };
 
@@ -25,13 +25,11 @@ export default function LoginPage() {
 
   const updateUser = (type, event) => {
     event.preventDefault();
-    console.log(event.target.value);
     setUser((prev) => {
       return { ...prev, [type]: event.target.value };
     });
   };
 
-  console.log(user);
   return (
     <S.FormContainer>
       <Form onSubmit={submitUser}>
