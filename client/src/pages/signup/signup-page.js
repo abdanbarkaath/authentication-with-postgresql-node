@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
@@ -6,27 +6,49 @@ import { useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const submitUser = (e) => {
     e.preventDefault();
-    console.log("submit user");
+    console.log("submit user", e);
   };
 
   const navigateToLogin = () => {
     navigate("/login");
   };
 
+  const updateUser = (type, event) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    setUser((prev) => {
+      return { ...prev, [type]: event.target.value };
+    });
+  };
+
+  console.log(user);
   return (
     <S.FormContainer>
       <Form onSubmit={submitUser}>
         <Form.Group className="mb-3" controlId="formBasicName">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="email" placeholder="Enter name" />
+          <Form.Control
+            type="name"
+            placeholder="Enter name"
+            onChange={(e) => updateUser("name", e)}
+          />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            onChange={(e) => updateUser("email", e)}
+          />
           <Form.Text className="text-muted">
             We'll never share your email with anyone else.
           </Form.Text>
@@ -34,7 +56,11 @@ export default function SignupPage() {
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            onChange={(e) => updateUser("password", e)}
+          />
         </Form.Group>
         <S.LoginText onClick={navigateToLogin}>
           {" "}
