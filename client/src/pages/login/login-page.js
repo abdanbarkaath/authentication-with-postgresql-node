@@ -12,11 +12,17 @@ export default function LoginPage() {
     password: "",
   });
 
-  const submitUser = (e) => {
-    e.preventDefault();
-    axios.post(`${basePath}/login`, user).then((res) => {
-      console.log(res.data, "login page");
-    });
+  const submitUser = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await axios.post(`${basePath}/auth/login`, user);
+      if (response.data) {
+        localStorage.setItem("auth", response.data.token);
+        navigate("/");
+      }
+    } catch (err) {
+      alert(err);
+    }
   };
 
   const navigateToSignup = () => {

@@ -3,19 +3,42 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import SignupPage from "./pages/signup/signup-page";
 import LoginPage from "./pages/login/login-page";
 import DashboardPage from "./pages/dashboard/dashboard-page";
+import axios from "axios";
+import { useEffect } from "react";
+import { basePath } from "./ui.config";
 
-function App() {
+const App = () => {
+  const checkAutherized = () => {
+    const auth = localStorage.getItem("auth");
+    console.log(auth, "auth");
+    if (auth) {
+      axios
+        .get(`${basePath}/auth/is-verified`, {
+          headers: {
+            token: auth,
+          },
+        })
+        .then((reponse) => {
+          console.log(reponse);
+        });
+    }
+  };
+
+  useEffect(() => {
+    checkAutherized();
+  }, []);
+
   return (
     <div className="App">
       <Router>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
-          <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Routes>
       </Router>
     </div>
   );
-}
+};
 
 export default App;

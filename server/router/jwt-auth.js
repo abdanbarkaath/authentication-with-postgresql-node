@@ -18,7 +18,7 @@ router.post("/register", validEmail, async (req, res) => {
     );
     if (doesUserExist.rows.length > 0) {
       errors.push({ message: "Email already exists" });
-      res.status(401).send({ errors });
+      return res.status(401).send({ errors });
     } else {
       const newUser = await pool.query(
         "INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *",
@@ -27,7 +27,6 @@ router.post("/register", validEmail, async (req, res) => {
 
       if (newUser.rows.length > 0) {
         const token = generateJwt(newUser.rows[0].id);
-        console.log(token);
         res.status(200).json({ token });
       } else {
         errors.push({ message: "something went wrong" });
@@ -35,42 +34,50 @@ router.post("/register", validEmail, async (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).send("something went wrong");
+    return res.status(500).send("something went wrong");
   }
 });
 
 //authenticate and login user
 
-router.post("/login", validEmail, async (req, res) => {
+router.post("/login", [validEmail], async (req, res) => {
   try {
     const { email, password } = req.body;
-    let errors = [];
+    let error = {};
     const user = await pool.query("SELECT * FROM users WHERE email = $1;", [
       email,
     ]);
     if (user.rows.length === 0) {
-      errors.push({ message: "No such user exists" });
-      res.status(401).send(errors);
+      error = {
+        message: "No such user exists",
+      };
+      return res.status(401).send(error);
     }
     const isMatch = await bcrypt.compare(password, user.rows[0].password);
     if (!isMatch) {
-      errors.push({ message: "Passowrd does not match" });
-      res.status(401).send({ errors });
+      console.log("here");
+      error = {
+        messsage: "Passowrd does not match",
+      };
+      return await res.status(401).send(error);
     }
     const token = generateJwt(user.rows[0].id);
-    res.status(200).send({ token });
+    return res.status(200).send({ token });
   } catch (err) {
-    res.status(500).send("Server Error");
+    console.log(err, "comes here");
+    return res.status(500).send(err);
   }
 });
 
 //Verify user with jwt
 router.get("/is-verified", authorizeMiddleware, (req, res) => {
   try {
-    res.json(true);
+    console.log(res);
+    return res.json({
+      isAutherized: true,
+    });
   } catch (err) {
-    res.status(500).send("Server Error");
+    return res.status(500).send("Server Error");
   }
 });
 
