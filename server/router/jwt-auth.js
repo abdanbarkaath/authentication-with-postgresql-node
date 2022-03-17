@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const pool = require("../db");
-
+const generateJwt = require("../jwt-generator/jwt-generator");
 //register user
 router.post("/register", async (req, res) => {
   try {
@@ -27,15 +27,19 @@ router.post("/register", async (req, res) => {
         errors.push({ message: "Email already exists" });
         res.status(401).send({ errors });
       } else {
-        pool.query(
+        const newUser = await pool.query(
           "INSERT INTO users(name, email, password) VALUES($1, $2, $3) RETURNING *",
-          [name, email, hashedPassword],
-          (err, result) => {
-            if (result) {
-              res.send({ success: true, user: result.rows[0] });
-            }
-          }
+          [name, email, hashedPassword]
         );
+
+        if (newUser.rows.length > 0) {
+          const token = generateJwt(newUser.rows[0].id);
+          console.log(token);
+          res.json({ token });
+        } else {
+          errors.push({ message: "something went wrong" });
+          res.status(500).send({ errors });
+        }
       }
     }
   } catch (err) {
