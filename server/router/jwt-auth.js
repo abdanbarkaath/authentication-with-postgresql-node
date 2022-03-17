@@ -47,4 +47,30 @@ router.post("/register", async (req, res) => {
   }
 });
 
+//authenticate and login user
+
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    let errors = [];
+    const user = await pool.query("SELECT * FROM users WHERE email = $1;", [
+      email,
+    ]);
+    if (user.rows.length === 0) {
+      errors.push({ message: "No such user exists" });
+      res.status(401).send(errors);
+    }
+    const isMatch = await bcrypt.compare(password, user.rows[0].password);
+    console.log(isMatch);
+    if (!isMatch) {
+      errors.push({ message: "Passowrd does not match" });
+      res.status(401).send({ errors });
+    }
+    const token = generateJwt(user.rows[0].id);
+    res.send({ token });
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
