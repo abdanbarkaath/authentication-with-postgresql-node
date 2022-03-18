@@ -1,41 +1,29 @@
+import React from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import SignupPage from "./pages/signup/signup-page";
-import LoginPage from "./pages/login/login-page";
 import DashboardPage from "./pages/dashboard/dashboard-page";
-import axios from "axios";
-import { useEffect } from "react";
-import { basePath } from "./ui.config";
+import OutletLayout from "./components/outlet-page/outlet-page";
+import LoginPage from "./pages/login/login-page";
+import RequireAuth from "./components/require-auth/require-auth";
+import { useAuthData } from "./contexts/auth-context";
 
 const App = () => {
-  const checkAutherized = () => {
-    const auth = localStorage.getItem("auth");
-    console.log(auth, "auth");
-    if (auth) {
-      axios
-        .get(`${basePath}/auth/is-verified`, {
-          headers: {
-            token: auth,
-          },
-        })
-        .then((reponse) => {
-          console.log(reponse);
-        });
-    }
-  };
-
-  useEffect(() => {
-    checkAutherized();
-  }, []);
+  const { auth } = useAuthData();
+  console.log("auth", auth);
 
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-      </Routes>
-    </div>
+    <Routes>
+      {/* public routes */}
+      <Route path="/" element={<OutletLayout />}>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="signup" element={<SignupPage />} />
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<DashboardPage />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 };
 

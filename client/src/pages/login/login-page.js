@@ -2,26 +2,28 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { basePath } from "../../ui.config";
 import { useAuthData } from "../../contexts/auth-context";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
   const { setAuth } = useAuthData();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-
+  console.log("gere");
   const submitUser = async (e) => {
     try {
       e.preventDefault();
       const response = await axios.post(`${basePath}/auth/login`, user);
       if (response.data) {
-        localStorage.se.tItem("auth", response.data.token);
-        setAuth({ token: response.data.token });
-        navigate("/");
+        localStorage.setItem("auth", response.data.token);
+        setAuth({ isAutherized: response.data.token });
+        navigate(from, { replace: true });
       }
     } catch (err) {
       alert(err);
