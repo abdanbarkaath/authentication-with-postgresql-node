@@ -22,7 +22,7 @@ export default function LoginPage() {
       const response = await axios.post(`${basePath}/auth/login`, user);
       if (response.data) {
         localStorage.setItem("auth", response.data.token);
-        setAuth({ isAutherized: response.data.token });
+        setAuth({ isAuthorized: response.data.token });
         navigate(from, { replace: true });
       }
     } catch (err) {

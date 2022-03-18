@@ -72,9 +72,8 @@ router.post("/login", [validEmail], async (req, res) => {
 //Verify user with jwt
 router.get("/is-verified", authorizeMiddleware, (req, res) => {
   try {
-    console.log(res);
     return res.json({
-      isAutherized: true,
+      isAuthorized: true,
     });
   } catch (err) {
     return res.status(500).send("Server Error");
