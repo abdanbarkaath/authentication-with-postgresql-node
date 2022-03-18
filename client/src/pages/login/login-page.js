@@ -4,9 +4,11 @@ import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { basePath } from "../../ui.config";
+import { useAuthData } from "../../contexts/auth-context";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { setAuth } = useAuthData();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -17,7 +19,8 @@ export default function LoginPage() {
       e.preventDefault();
       const response = await axios.post(`${basePath}/auth/login`, user);
       if (response.data) {
-        localStorage.setItem("auth", response.data.token);
+        localStorage.se.tItem("auth", response.data.token);
+        setAuth({ token: response.data.token });
         navigate("/");
       }
     } catch (err) {

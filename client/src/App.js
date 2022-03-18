@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignupPage from "./pages/signup/signup-page";
 import LoginPage from "./pages/login/login-page";
 import DashboardPage from "./pages/dashboard/dashboard-page";
@@ -30,13 +30,11 @@ const App = () => {
 
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+      </Routes>
     </div>
   );
 };
