@@ -8,6 +8,7 @@ import LoginPage from "./pages/login/login-page";
 import RequireAuth from "./components/require-auth/require-auth";
 import { useAuthData } from "./contexts/auth-context";
 import User from "./pages/user/user";
+import PersistentLogin from "./components/persistent-login/persistent-login";
 
 const App = () => {
   const { auth } = useAuthData();
@@ -20,9 +21,11 @@ const App = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="signup" element={<SignupPage />} />
         {/* protected routes */}
-        <Route element={<RequireAuth />}>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/user" element={<User />} />
+        <Route element={<PersistentLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/user" element={<User />} />
+          </Route>
         </Route>
       </Route>
     </Routes>
