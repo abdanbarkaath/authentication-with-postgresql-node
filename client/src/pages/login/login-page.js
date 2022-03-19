@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import axios from "axios";
+import axios from "../../api/axios";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-import { basePath } from "../../ui.config";
 import { useAuthData } from "../../contexts/auth-context";
 
 export default function LoginPage() {
@@ -15,11 +14,10 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  console.log("gere");
   const submitUser = async (e) => {
     try {
       e.preventDefault();
-      const response = await axios.post(`${basePath}/auth/login`, user);
+      const response = await axios.post("/auth/login", user);
       if (response.data) {
         localStorage.setItem("auth", response.data.token);
         setAuth({ isAuthorized: response.data.token });

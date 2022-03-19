@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import axios from "axios";
+import axios from "../../api/axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { basePath } from "../../ui.config";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ export default function SignupPage() {
 
   const submitUser = (e) => {
     e.preventDefault();
-    axios.post(`${basePath}/register`, user).then((res) => {
+    axios.post("auth/register", user).then((res) => {
       if (res.data?.errors?.length > 0) {
         alert(res.data.errors[0].message);
       } else {

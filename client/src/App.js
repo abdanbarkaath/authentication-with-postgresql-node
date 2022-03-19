@@ -7,6 +7,7 @@ import OutletLayout from "./components/outlet-page/outlet-page";
 import LoginPage from "./pages/login/login-page";
 import RequireAuth from "./components/require-auth/require-auth";
 import { useAuthData } from "./contexts/auth-context";
+import User from "./pages/user/user";
 
 const App = () => {
   const { auth } = useAuthData();
@@ -21,6 +22,7 @@ const App = () => {
         {/* protected routes */}
         <Route element={<RequireAuth />}>
           <Route path="/" element={<DashboardPage />} />
+          <Route path="/user" element={<User />} />
         </Route>
       </Route>
     </Routes>
