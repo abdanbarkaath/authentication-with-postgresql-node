@@ -20,7 +20,7 @@ export default function LoginPage() {
       const response = await axios.post("/auth/login", user);
       if (response.data) {
         localStorage.setItem("auth", response.data.token);
-        setAuth({ isAuthorized: response.data.token });
+        setAuth({ token: response.data.token });
         navigate(from, { replace: true });
       }
     } catch (err) {
